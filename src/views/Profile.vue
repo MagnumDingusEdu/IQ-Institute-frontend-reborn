@@ -49,7 +49,13 @@
       necessitatibus nemo, officia, optio quaerat quibusdam quis repudiandae rerum sequi totam ullam voluptates. Ad
       commodi, eaque earum fuga fugit impedit itaque molestiae natus obcaecati odio officia, recusandae tempore
       temporibus ut?</p>
+    <vue-plyr>
+      <div data-plyr-provider="youtube" data-plyr-embed-id="bTqVqk7FSmY"></div>
+    </vue-plyr>
   </v-container>
+
+
+
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-slide-y-transition mode="in">
+  <v-slide-y-transition >
     <v-btn
         v-scroll="onScroll"
         v-show="fab"

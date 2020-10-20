@@ -4,12 +4,28 @@ import Vuetify from 'vuetify/lib';
 import axios from 'axios'
 import VueAxios from 'vue-axios';
 import '@fortawesome/fontawesome-free/css/all.css'
+import VuePlyr from "vue-plyr";
+import moment from 'moment';
 
 Vue.use(Vuetify);
-Vue.use(VueAxios, axios);
 
 axios.defaults.baseURL = 'http://localhost:8000'
 export default new Vuetify({
-    iconfont: 'mdi' | 'fa',
+    iconfont: 'mdi' | 'fa' | 'fas',
     theme: { light: false, dark: true },
+});
+
+Vue.use(VueAxios, axios);
+
+Vue.use(VuePlyr, {
+    plyr: {
+        fullscreen: {enabled: true}
+    },
+})
+
+
+Vue.filter('formatDate', function(value) {
+    if (value) {
+        return moment(String(value)).format('LL')
+    }
 });
