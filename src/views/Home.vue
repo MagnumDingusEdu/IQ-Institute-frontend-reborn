@@ -4,7 +4,7 @@
       <v-row class="mb-3">
         <v-col class="text-right">
 
-          <v-menu offset-y transition="slide-y-transition" bottom right >
+          <v-menu offset-y transition="slide-y-transition" bottom right>
             <template v-slot:activator="{ on, attrs }">
               <v-btn small depressed text color="grey" v-bind="attrs" v-on="on">
                 <v-icon left small>
@@ -14,12 +14,12 @@
               </v-btn>
             </template>
             <v-list dense>
-              <v-list-item @click="sortBy('title')" >
+              <v-list-item @click="sortBy('title')">
                 <v-list-item-action>
                   <v-list-item-title>Title</v-list-item-title>
                 </v-list-item-action>
               </v-list-item>
-              <v-list-item @click="sortBy('due')" class="rounded-b-xl">
+              <v-list-item @click="sortBy('upload_date')" class="rounded-b-xl">
                 <v-list-item-action>
                   <v-list-item-title>Date Created</v-list-item-title>
                 </v-list-item-action>
@@ -29,22 +29,34 @@
 
         </v-col>
       </v-row>
-      <Card
-          v-for="project in projects"
 
-          :key="project.title"
+      <template v-if="loading">
 
-          :title="project.title"
-          :person="project.person"
-          :due="project.due"
-          :status="project.status"
-          :content="project.content"
-          :divider="false"
-          class="mb-3">
-
-      </Card>
+        <v-skeleton-loader
+            v-for="i in 6" :key="i"
+            type="list-item-three-line"
+            max-height="100"
+            class="mb-3"
+        ></v-skeleton-loader>
 
 
+      </template>
+      <template v-else>
+        <Card
+
+            v-for="lecture in lecture_list"
+
+            :key="lecture.id"
+
+            :title="lecture.title"
+            :upload_date="lecture.id"
+            :status="'ongoing'"
+            :divider="false"
+            class="mb-3">
+
+        </Card>
+
+      </template>
     </v-container>
   </div>
 </template>
@@ -53,49 +65,41 @@
 
 import Card from "@/components/Card";
 
+
 export default {
   name: 'Home',
   components: {Card},
   data() {
     return {
-      projects: [
-        {
-          title: 'Design a new website',
-          person: 'The Net Ninja',
-          due: '1st Jan 2019',
-          status: 'ongoing',
-          content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Code up the homepage',
-          person: 'Chun Li',
-          due: '10th Jan 2019',
-          status: 'complete',
-          content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Design video thumbnails',
-          person: 'Ryu',
-          due: '20th Dec 2018',
-          status: 'complete',
-          content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-        {
-          title: 'Create a community forum',
-          person: 'Gouken',
-          due: '20th Oct 2018',
-          status: 'overdue',
-          content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'
-        },
-      ],
+      loading: true,
       activate: true,
-
+      info: null,
+      lecture_list: null,
     }
   },
   methods: {
     sortBy(prop) {
-      this.projects.sort((a, b) => a[prop] < b[prop] ? -1 : 1);
+      this.lecture_list.sort((a, b) => a[prop] < b[prop] ? -1 : 1);
+    }
+  },
+  mounted() {
+    this.axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(response => {
+            this.loading = false;
+            this.lecture_list = response.data;
+            console.log(this.lecture_list);
+        });
+
+    setTimeout(function () {
+      this.loading = false;
+    }, 3000);
+
+  },
+  computed: {
+    projects() {
+      return this.$store.state.projects;
     }
   }
+
 }
 </script>

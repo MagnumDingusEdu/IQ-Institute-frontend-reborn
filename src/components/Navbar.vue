@@ -12,23 +12,30 @@
         <v-icon right>mdi-exit-to-app</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer absolute temporary v-model="drawer">
-      <v-list>
-        <v-list-item class="align-content-center">
-          <v-list-item-avatar class="align-content-center" size="100">
-            <v-img src="https://magnum.wtf/assets/images/pp-extracted-compressed-860x923.png"></v-img>
-          </v-list-item-avatar>
-        </v-list-item>
+    <v-navigation-drawer app temporary v-model="drawer">
+      <v-row>
+        <v-col class="text-center">
+          <v-list>
+            <v-list-item class="d-flex justify-center ml-1">
+              <v-list-item-avatar class="align-center" size="100" tile>
+                <v-img src="../assets/iq-logo.png"></v-img>
+              </v-list-item-avatar>
+            </v-list-item>
 
-        <v-list-item link>
-          <v-list-item-content>
-            <v-list-item-title class="title">
-              Sandra Adams
-            </v-list-item-title>
-            <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title class="title mb-1">
+                  <div class="heading">
+                    <span class="font-weight-light text-uppercase">IQ</span>
+                    <span class="font-weight-medium text-uppercase"> Institute</span>
+                  </div>
+                </v-list-item-title>
+                <v-list-item-subtitle>Lecture Portal</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
 
       <v-divider></v-divider>
 

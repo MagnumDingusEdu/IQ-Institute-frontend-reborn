@@ -1,23 +1,28 @@
 <template>
   <div class="">
-    <v-card elevation="3" :class="`project-${status}`" class="pl-4 py-3" >
+    <v-card elevation="3" :class="`project-${status}`" class="pl-4 py-3">
 
       <v-row>
-        <v-col cols="12" md="6">
-          <div class="caption grey--text">Project Title</div>
-          <div class="">{{ title }}</div>
+
+        <v-img
+            max-width="150"
+            lazy-src="https://i.ytimg.com/vi/ZnWt-VDn6YA/hqdefault.jpg"
+            src="https://i.ytimg.com/vi/ZnWt-VDn6YA/maxresdefault.jpg"
+            contain
+            class="ma-2"
+        ></v-img>
+
+        <v-col cols="8" md="6">
+          <div class="caption grey--text">Video Title</div>
+          <span class="text-h6  " style="max-height: 150px">{{ title }}</span>
         </v-col>
+
         <v-col cols="6" sm="4" md="2">
 
-          <div class="caption grey--text">Person</div>
-          <div class="">{{ person }}</div>
+          <div class="caption grey--text">Uploaded on</div>
+          <div class="">{{ upload_date }}</div>
         </v-col>
-        <v-col cols="6" sm="4" md="2">
-
-          <div class="caption grey--text">Due by</div>
-          <div class="">{{ due }}</div>
-        </v-col>
-        <v-col cols="12" sm="4" md="2">
+        <v-col cols="12" sm="2" md="2">
 
           <div class="caption grey--text">Status</div>
           <div class="">{{ status }}</div>
@@ -36,10 +41,10 @@ export default {
   props: [
     'title',
     'person',
-    'due',
+    'upload_date',
     'status',
     'content',
-      'divider'
+    'divider'
 
   ]
 
@@ -55,7 +60,7 @@ export default {
   border-left: 4px solid orange;
 }
 
-.project-overdue {
+.project-overupload_date {
   border-left: 4px solid tomato;
 }
 </style>
