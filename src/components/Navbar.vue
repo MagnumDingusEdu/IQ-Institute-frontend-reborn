@@ -7,56 +7,63 @@
         <span class="font-weight-medium"> Institute</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <div class="mx-3" v-if="!searching"></div>
-      <v-tab-transition>
-        <v-autocomplete
-            v-if="searching"
-            v-model="search_model"
-            :items="items"
-            :loading="search_loading"
-            :search-input.sync="search"
-            label="Search..."
-            color="grey mr-8"
-            height="10"
-            single-line
-            dense
-            hide-details
-            hide-no-data
-            hide-selected
-            solo
-        ></v-autocomplete>
-      </v-tab-transition>
-      <v-expand-transition>
-        <v-list
-            v-if="search_model && searching"
-        >
+      <div class="mx-3" v-if="!s_visible"></div>
+
+      <v-menu
+          rounded="b-xl"
+          offset-y
+          v-if="s_visible"
+          transition="slide-y-transition"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+              v-bind="attrs"
+              v-on="on"
+              :loading="s_loading"
+              @input="s_search"
+              label="Search"
+              color="white"
+              placeholder="Search..."
+              append-icon="mdi-magnify"
+              class="my-auto grey--text"
+              background-color="grey darken-3"
+              dense
+              clearable
+              filled
+              solo
+              hide-details
+          ></v-text-field>
+        </template>
+        <v-list>
           <v-list-item
-              v-for="(field, i) in fields"
-              :key="i"
+              v-for="item in items"
+              :key="item.id"
+              link
+              class="grey darken-4"
+
+
           >
-            <v-list-item-content>
-              <v-list-item-title v-text="field.value"></v-list-item-title>
-              <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
-            </v-list-item-content>
+
+            <v-list-item-title v-text="item.title" ></v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-expand-transition>
-      <div class="ml-3" v-if="searching"></div>
+      </v-menu>
+      <div class="ml-3" v-if="s_visible"></div>
       <v-btn
-          v-if="searching"
-          v-on:click="searching = !searching"
+          v-if="s_visible"
+          v-on:click="s_visible = !s_visible"
           icon
           text
       >
         <v-icon
             size="15">
-          fa-times
+          mdi-cancel
         </v-icon>
 
       </v-btn>
       <v-btn
-          v-if="!searching"
-          v-on:click="searching = !searching"
+          v-if="!s_visible"
+          v-on:click="s_visible = !s_visible"
           icon
           text
       >
@@ -113,6 +120,8 @@
 </template>
 
 <script>
+import _ from 'lodash';
+
 export default {
   name: "Navbar.vue",
   components: {},
@@ -120,11 +129,10 @@ export default {
     return {
       drawer: false,
       group: null,
-      searching: false,
-      search_loading: false,
-      search_model: null,
-      search: null,
-      search_entries: [],
+      s_visible: false,
+      s_loading: false,
+      items: [],
+
       nav_items: [
         {id: 1, title: "Home", icon: "mdi-home", route: "/"},
         {id: 2, title: "Profile", icon: "mdi-face", route: "/profile"},
@@ -137,11 +145,43 @@ export default {
   watch: {
     group() {
       this.drawer = false
-    }
-  }
+    },
+
+
+  },
+  methods: {
+
+    s_search(value) {
+      this.s_debounced_search(value);
+      this.s_loading = true;
+    },
+
+    s_debounced_search: _.debounce(function (string) {
+      console.log(string);
+      if (string === "") {
+        this.items = []
+      } else {
+        this.axios.get('http://localhost:8000/api')
+            .then(response => {
+              this.s_loading = false;
+              this.items = response.data.slice(0,10);
+            })
+            .catch(error => {
+              console.log(error);
+              this.$store.commit('showSnackbar', 'Network error. Please check your internet connection.')
+            });
+      }
+
+    }, 300)
+
+  },
+
+  computed: {}
 }
 </script>
 
 <style scoped>
-
+.tile {
+  background: yellow;
+}
 </style>

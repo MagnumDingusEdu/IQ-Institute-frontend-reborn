@@ -11,10 +11,12 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "plyr": "^3.6.2",
     "vue": "^2.6.11",
     "vue-axios": "^3.1.1",
+    "vue-lodash": "^2.1.2",
     "vue-plyr": "^6.0.4",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",
@@ -47,7 +49,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {},
+    "globals": {
+      "_": true
+    }
   },
   "browserslist": [
     "> 1%",

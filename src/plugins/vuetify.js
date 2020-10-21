@@ -6,6 +6,8 @@ import VueAxios from 'vue-axios';
 import '@fortawesome/fontawesome-free/css/all.css'
 import VuePlyr from "vue-plyr";
 import moment from 'moment';
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
 
 Vue.use(Vuetify);
 
@@ -23,7 +25,7 @@ Vue.use(VuePlyr, {
     },
 })
 
-
+Vue.use(VueLodash, { name: 'custom' , lodash: lodash })
 Vue.filter('formatDate', function(value) {
     if (value) {
         return moment(String(value)).format('LL')

@@ -1,7 +1,6 @@
 <template>
   <div class="text-center ma-2" v-if="visible">
     <v-snackbar
-        v-model="visible"
         transition="slide-y-transition"
     >
       {{ message }}
