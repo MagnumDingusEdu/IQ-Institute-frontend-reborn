@@ -6,48 +6,49 @@
         <span class="font-weight-light">IQ</span>
         <span class="font-weight-medium"> Institute</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <div class="mx-3" v-if="!s_visible"></div>
+      <template v-if="loggedIn">
+        <v-spacer></v-spacer>
+        <div class="mx-3" v-if="!s_visible"></div>
 
-      <v-menu
-          rounded="b-xl"
-          offset-y
-          v-if="s_visible"
-          transition="slide-y-transition"
-          open-on-hover
-          :onblur="menu_state"
+        <v-menu
+            rounded="b-xl"
+            offset-y
+            v-if="s_visible"
+            transition="slide-y-transition"
+            open-on-hover
+            :onblur="menu_state"
 
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-              v-bind="attrs"
-              v-on="on"
-              :loading="s_loading"
-              @input="s_search"
-              label="Search"
-              color="white"
-              placeholder="Search..."
-              append-icon="mdi-magnify"
-              class="my-auto grey--text search-box"
-              background-color="grey darken-3"
-              dense
-              clearable
-              filled
-              solo
-              hide-details
-          ></v-text-field>
-        </template>
-        <v-list>
-          <v-list-item
-              v-for="item in items"
-              :key="item.id"
-              link
-              class="search-tile"
-              @click="playSearchVid(item.id, item.title)"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-bind="attrs"
+                v-on="on"
+                :loading="s_loading"
+                @input="s_search"
+                label="Search"
+                color="white"
+                placeholder="Search..."
+                append-icon="mdi-magnify"
+                class="my-auto grey--text search-box"
+                background-color="grey darken-3"
+                dense
+                clearable
+                filled
+                solo
+                hide-details
+            ></v-text-field>
+          </template>
+          <v-list>
+            <v-list-item
+                v-for="item in items"
+                :key="item.id"
+                link
+                class="search-tile"
+                @click="playSearchVid(item.id, item.title)"
 
-          >
-            <v-list-item-avatar
-            rounded="0">
+            >
+              <v-list-item-avatar
+                  rounded="0">
                 <v-img
                     max-width="150"
                     :lazy-src="`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`"
@@ -55,40 +56,41 @@
                     contain
                     class="ma-2"
                 ></v-img>
-                          </v-list-item-avatar>
-            <v-list-item-title v-text="item.title" ></v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <div class="ml-3" v-if="s_visible"></div>
-      <v-btn
-          v-if="s_visible"
-          v-on:click="closeSearch"
-          icon
-          text
-      >
-        <v-icon
-            size="15">
-          mdi-cancel
-        </v-icon>
+              </v-list-item-avatar>
+              <v-list-item-title v-text="item.title"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <div class="ml-3" v-if="s_visible"></div>
+        <v-btn
+            v-if="s_visible"
+            v-on:click="closeSearch"
+            icon
+            text
+        >
+          <v-icon
+              size="15">
+            mdi-cancel
+          </v-icon>
 
-      </v-btn>
-      <v-btn
-          v-if="!s_visible"
-          v-on:click="openSearch"
-          icon
-          text
-      >
-        <v-icon
-            size="15">
-          fa-search
-        </v-icon>
+        </v-btn>
+        <v-btn
+            v-if="!s_visible"
+            v-on:click="openSearch"
+            icon
+            text
+        >
+          <v-icon
+              size="15">
+            fa-search
+          </v-icon>
 
-      </v-btn>
-      <v-btn color="white ml-5" depressed text>
-        <span>Sign out</span>
-        <v-icon right>mdi-exit-to-app</v-icon>
-      </v-btn>
+        </v-btn>
+        <v-btn color="white ml-5" depressed text @click="logOutCurrentUser">
+          <span>Sign out</span>
+          <v-icon right>mdi-exit-to-app</v-icon>
+        </v-btn>
+      </template>
     </v-app-bar>
     <v-navigation-drawer app temporary v-model="drawer">
       <v-row>
@@ -117,7 +119,7 @@
 
       <v-divider></v-divider>
 
-      <v-list nav dense>
+      <v-list nav dense v-if="loggedIn">
         <v-list-item link v-for="nav_it in nav_items" v-bind:key="nav_it.id" :to="nav_it.route">
           <v-list-item-icon>
             <v-icon>{{ nav_it.icon }}</v-icon>
@@ -126,7 +128,9 @@
         </v-list-item>
 
       </v-list>
-
+      <span v-else class="d-flex text-center justify-center align-center subtitle-2 mt-3">
+        Logged in as guest
+      </span>
     </v-navigation-drawer>
   </nav>
 </template>
@@ -159,19 +163,18 @@ export default {
       this.drawer = false
     },
 
-    items(){
-        // if(this.items.length === 0){
-        //   this.$store.commit('disableOverlay');
-        // }else {
-        //   this.$store.commit('enableOverlay')
-        // }
+    items() {
+      // if(this.items.length === 0){
+      //   this.$store.commit('disableOverlay');
+      // }else {
+      //   this.$store.commit('enableOverlay')
+      // }
     },
-
 
 
   },
   methods: {
-    menu_state(){
+    menu_state() {
       console.log(this.menu_state);
     },
     s_search(value) {
@@ -187,17 +190,16 @@ export default {
         this.axios.get('http://localhost:8000/api')
             .then(response => {
               this.s_loading = false;
-              this.items = response.data.slice(0,10);
+              this.items = response.data.slice(0, 10);
             })
             .catch(error => {
               console.log(error);
-              this.$store.commit('showSnackbar', 'Network error. Please check your internet connection.')
             });
       }
 
     }, 300),
 
-    openSearch(){
+    openSearch() {
       this.s_visible = true;
       this.items = []
 
@@ -207,15 +209,23 @@ export default {
       this.items = []
     },
 
-    playSearchVid(id, title){
+    playSearchVid(id, title) {
 
-        this.$store.commit('playVideo',{id: id, title: title});
+      this.$store.commit('playVideo', {id: id, title: title});
 
+    },
+    logOutCurrentUser() {
+      this.$store.commit('logout');
+      this.$router.push('/login');
     }
 
   },
 
-  computed: {},
+  computed: {
+    loggedIn() {
+      return this.$store.state.user.is_authenticated;
+    }
+  },
 
 }
 </script>
@@ -224,7 +234,8 @@ export default {
 .tile {
   background: yellow;
 }
-.search-box{
+
+.search-box {
   border-left: 4px white solid;
 }
 

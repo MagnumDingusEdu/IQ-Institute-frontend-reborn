@@ -2,7 +2,6 @@
   <div class="dashboard pa-0 ma-0" >
     <v-overlay :value="overlay" absolute opacity="0.5" color="black"></v-overlay>
     <GoHome/>
-    <Snackbar/>
     <Player/>
     <!--    Main Content -->
     <v-container class="mt-15">
@@ -87,13 +86,12 @@
 <script>
 
 import Card from "@/components/Card";
-import Snackbar from "@/components/Snackbar";
 import GoHome from "@/components/GoHome";
 import Player from "@/components/Player";
 
 export default {
   name: 'Home',
-  components: {Card, GoHome, Snackbar, Player},
+  components: {Card, GoHome, Player},
   data() {
     return {
       loading: true,
@@ -109,7 +107,6 @@ export default {
 
   },
   mounted() {
-    this.$store.commit('showSnackbar', 'this is a snackbar test');
     this.axios.get('http://localhost:8000/api')
         .then(response => {
           this.loading = false;

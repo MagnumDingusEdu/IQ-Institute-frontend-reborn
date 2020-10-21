@@ -46,8 +46,13 @@ export default {
   },
 
   computed: {
-    dialog() {
-      return this.$store.state.dashboard.video_playing;
+    dialog:  {
+      get: function(){
+        return this.$store.state.dashboard.video_playing;
+      },
+      set: function(){
+
+      }
     },
 
     currentVideoInfo() {

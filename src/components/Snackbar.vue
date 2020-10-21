@@ -1,22 +1,27 @@
 <template>
-  <div class="text-center ma-2" v-if="visible">
-    <v-snackbar
-        transition="slide-y-transition"
-    >
-      {{ message }}
+  <v-dialog-bottom-transition>
+    <div class="text-center ma-2" v-if="visible" >
+      <v-snackbar
 
-      <template v-slot:action="{ attrs }">
-        <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="closeSnackbar"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </div>
+          :value="visible"
+          color="grey darken-4"
+          elevation="24"
+      >
+        {{ message }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+              color="white"
+              text
+              v-bind="attrs"
+              @click="closeSnackbar"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
+  </v-dialog-bottom-transition>
 </template>
 
 
@@ -25,9 +30,11 @@ export default {
   name: "Snackbar",
   computed: {
     message(){
+
       return this.$store.state.snackbar.message;
     },
     visible(){
+      console.log('message check');
       return this.$store.state.snackbar.visible;
     },
 
