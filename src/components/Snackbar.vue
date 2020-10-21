@@ -1,6 +1,6 @@
 <template>
   <v-dialog-bottom-transition>
-    <div class="text-center ma-2" v-if="visible" >
+    <div class="text-center ma-2" v-if="visible">
       <v-snackbar
 
           :value="visible"
@@ -29,19 +29,18 @@
 export default {
   name: "Snackbar",
   computed: {
-    message(){
+    message() {
 
       return this.$store.state.snackbar.message;
     },
-    visible(){
-      console.log('message check');
+    visible() {
       return this.$store.state.snackbar.visible;
     },
 
   },
 
   methods: {
-    closeSnackbar(){
+    closeSnackbar() {
       this.$store.commit('dismissSnackbar');
     }
   }

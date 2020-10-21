@@ -5,8 +5,26 @@
     <Player/>
     <!--    Main Content -->
     <v-container class="mt-15">
-      <v-row class="mb-3">
-        <v-col class="text-right">
+      <v-row class="mb-3 d-flex justify-space-between" >
+        <v-col cols="9">
+          <v-btn
+          text
+          class="grey--text text--lighten-2"
+          >
+            <v-icon left>
+              fa-chevron-left
+            </v-icon>
+            Go back
+          </v-btn>
+          |
+          <v-btn
+              text
+              class="grey--text text--lighten-2"
+          >
+            Home
+          </v-btn>
+        </v-col>
+        <v-col  cols="3 d-flex justify-end">
 
           <v-menu offset-y transition="slide-y-transition" bottom right>
             <template v-slot:activator="{ on, attrs }">
@@ -14,7 +32,7 @@
                 <v-icon left small>
                   mdi-sort
                 </v-icon>
-                <span class="subtitle-1">Sort</span>
+                <span class="subtitle-1 grey--text text--lighten-2">Sort</span>
               </v-btn>
             </template>
 
