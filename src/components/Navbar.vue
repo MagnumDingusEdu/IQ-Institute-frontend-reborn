@@ -7,7 +7,66 @@
         <span class="font-weight-medium"> Institute</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="white" depressed text>
+      <div class="mx-3" v-if="!searching"></div>
+      <v-tab-transition>
+        <v-autocomplete
+            v-if="searching"
+            v-model="search_model"
+            :items="items"
+            :loading="search_loading"
+            :search-input.sync="search"
+            label="Search..."
+            color="grey mr-8"
+            height="10"
+            single-line
+            dense
+            hide-details
+            hide-no-data
+            hide-selected
+            solo
+        ></v-autocomplete>
+      </v-tab-transition>
+      <v-expand-transition>
+        <v-list
+            v-if="search_model && searching"
+        >
+          <v-list-item
+              v-for="(field, i) in fields"
+              :key="i"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="field.value"></v-list-item-title>
+              <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-expand-transition>
+      <div class="ml-3" v-if="searching"></div>
+      <v-btn
+          v-if="searching"
+          v-on:click="searching = !searching"
+          icon
+          text
+      >
+        <v-icon
+            size="15">
+          fa-times
+        </v-icon>
+
+      </v-btn>
+      <v-btn
+          v-if="!searching"
+          v-on:click="searching = !searching"
+          icon
+          text
+      >
+        <v-icon
+            size="15">
+          fa-search
+        </v-icon>
+
+      </v-btn>
+      <v-btn color="white ml-5" depressed text>
         <span>Sign out</span>
         <v-icon right>mdi-exit-to-app</v-icon>
       </v-btn>
@@ -56,14 +115,20 @@
 <script>
 export default {
   name: "Navbar.vue",
+  components: {},
   data() {
     return {
       drawer: false,
       group: null,
+      searching: false,
+      search_loading: false,
+      search_model: null,
+      search: null,
+      search_entries: [],
       nav_items: [
         {id: 1, title: "Home", icon: "mdi-home", route: "/"},
         {id: 2, title: "Profile", icon: "mdi-face", route: "/profile"},
-        {id: 3, title: "Restricted", icon: "mdi-lock", route: "/restricted"}
+        {id: 3, title: "Restricted", icon: "mdi-lock", route: "/login"}
       ],
 
     }

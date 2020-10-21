@@ -1,42 +1,9 @@
 <template>
   <div class="dashboard">
     <GoHome/>
-    <v-row justify="center">
-      <v-dialog
-          v-model="dialog"
-          fullscreen
-          hide-overlay
-          transition="dialog-bottom-transition"
-      >
-
-        <v-card>
-          <v-toolbar
-              dark
-              color="primary"
-          >
-            <v-btn
-                icon
-                dark
-                @click="dialog = false"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title>Settings</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn
-                  dark
-                  text
-                  @click="dialog = false"
-              >
-                Save
-              </v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
-
-        </v-card>
-      </v-dialog>
-    </v-row>
+    <Snackbar/>
+    <Player/>
+    <!--    Main Content -->
     <v-container class="mt-15">
       <v-row class="mb-3">
         <v-col class="text-right">
@@ -52,14 +19,19 @@
             </template>
 
             <v-list dense>
-              <v-list-item @click="sortBy('title')">
+              <v-list-item @click="sort_listing('title')">
                 <v-list-item-action>
                   <v-list-item-title>Title</v-list-item-title>
                 </v-list-item-action>
               </v-list-item>
-              <v-list-item @click="sortBy('upload_date')" class="rounded-b-xl">
+              <v-list-item @click="sort_listing('date')" class="rounded-b-xl">
                 <v-list-item-action>
-                  <v-list-item-title>Date Created</v-list-item-title>
+                  <v-list-item-title>Date</v-list-item-title>
+                </v-list-item-action>
+              </v-list-item>
+              <v-list-item @click="sort_listing('type')" class="rounded-b-xl">
+                <v-list-item-action>
+                  <v-list-item-title>Type</v-list-item-title>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
@@ -101,6 +73,7 @@
             :status="'ongoing'"
             :divider="false"
             :video_id="lecture.id"
+            :is_video="lecture.type"
             class="mb-3">
 
         </Card>
@@ -113,44 +86,50 @@
 <script>
 
 import Card from "@/components/Card";
-
+import Snackbar from "@/components/Snackbar";
 import GoHome from "@/components/GoHome";
+import Player from "@/components/Player";
 
 export default {
   name: 'Home',
-  components: {Card, GoHome},
+  components: {Card, GoHome, Snackbar, Player},
   data() {
     return {
       loading: true,
-      activate: true,
       info: null,
-      lecture_list: null,
-      dialog: false,
     }
   },
 
   methods: {
-    sortBy(prop) {
-      this.lecture_list.sort((a, b) => a[prop] < b[prop] ? -1 : 1);
-    }
+    sort_listing(prop) {
+      this.$store.commit('sortDirectoryListing', prop);
+    },
+
+
   },
   mounted() {
+    this.$store.commit('showSnackbar', 'this is a snackbar test');
     this.axios.get('http://localhost:8000/api')
         .then(response => {
           this.loading = false;
-          this.lecture_list = response.data;
-          console.log(this.lecture_list);
+          this.$store.commit('setDirectoryListing', response.data);
+          this.$store.commit('sortDirectoryListing', 'type');
+        })
+        .catch(_ => {
+
+          _
+          this.snack_message = "Network error while loading resource";
+          this.snackbar = true;
         });
 
-    setTimeout(function () {
-      this.loading = false;
-    }, 3000);
 
   },
   computed: {
-    projects() {
-      return this.$store.state.projects;
-    }
+    lecture_list() {
+      return this.$store.state.dashboard.directory_listing;
+    },
+
+
   }
 
 }

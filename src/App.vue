@@ -7,32 +7,24 @@
 
       </router-view>
     </v-main>
+    <Footer />
   </v-app>
 </template>
 
 <script>
 
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 export default {
   name: 'App',
 
   components: {
     Navbar,
+    Footer
   },
   data: () => ({
     //
   }),
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
-  methods: {
-    handleScroll() {
-      this.$store.commit('setCurrentScrollY', window.scrollY);
-    }
 
-  }
 };
 </script>
