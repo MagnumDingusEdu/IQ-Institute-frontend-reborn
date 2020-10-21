@@ -14,6 +14,9 @@
           offset-y
           v-if="s_visible"
           transition="slide-y-transition"
+          open-on-hover
+          :onblur="menu_state"
+
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
@@ -25,7 +28,7 @@
               color="white"
               placeholder="Search..."
               append-icon="mdi-magnify"
-              class="my-auto grey--text"
+              class="my-auto grey--text search-box"
               background-color="grey darken-3"
               dense
               clearable
@@ -39,11 +42,20 @@
               v-for="item in items"
               :key="item.id"
               link
-              class="grey darken-4"
-
+              class="search-tile"
+              @click="playSearchVid(item.id, item.title)"
 
           >
-
+            <v-list-item-avatar
+            rounded="0">
+                <v-img
+                    max-width="150"
+                    :lazy-src="`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`"
+                    :src="`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`"
+                    contain
+                    class="ma-2"
+                ></v-img>
+                          </v-list-item-avatar>
             <v-list-item-title v-text="item.title" ></v-list-item-title>
           </v-list-item>
         </v-list>
@@ -51,7 +63,7 @@
       <div class="ml-3" v-if="s_visible"></div>
       <v-btn
           v-if="s_visible"
-          v-on:click="s_visible = !s_visible"
+          v-on:click="closeSearch"
           icon
           text
       >
@@ -63,7 +75,7 @@
       </v-btn>
       <v-btn
           v-if="!s_visible"
-          v-on:click="s_visible = !s_visible"
+          v-on:click="openSearch"
           icon
           text
       >
@@ -147,10 +159,21 @@ export default {
       this.drawer = false
     },
 
+    items(){
+        // if(this.items.length === 0){
+        //   this.$store.commit('disableOverlay');
+        // }else {
+        //   this.$store.commit('enableOverlay')
+        // }
+    },
+
+
 
   },
   methods: {
-
+    menu_state(){
+      console.log(this.menu_state);
+    },
     s_search(value) {
       this.s_debounced_search(value);
       this.s_loading = true;
@@ -172,16 +195,42 @@ export default {
             });
       }
 
-    }, 300)
+    }, 300),
+
+    openSearch(){
+      this.s_visible = true;
+      this.items = []
+
+    },
+    closeSearch() {
+      this.s_visible = false;
+      this.items = []
+    },
+
+    playSearchVid(id, title){
+
+        this.$store.commit('playVideo',{id: id, title: title});
+
+    }
 
   },
 
-  computed: {}
+  computed: {},
+
 }
 </script>
 
 <style scoped>
 .tile {
   background: yellow;
+}
+.search-box{
+  border-left: 4px white solid;
+}
+
+.search-tile {
+  border-left: 4px white solid !important;
+  border-right: 4px white solid !important;
+
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard pa-0 ma-0" >
+    <v-overlay :value="overlay" absolute opacity="0.5" color="black"></v-overlay>
     <GoHome/>
     <Snackbar/>
     <Player/>
@@ -129,8 +130,12 @@ export default {
       return this.$store.state.dashboard.directory_listing;
     },
 
+    overlay(){
+      return this.$store.state.dashboard.overlay;
+    }
 
-  }
+  },
+
 
 }
 </script>

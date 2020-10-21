@@ -10,27 +10,36 @@ export default {
         current_video_id: null,
         current_video_title: null,
         video_playing: false,
+
+        overlay: false,
     },
     getters: {},
     mutations: {
         setDirectoryListing(state, payload) {
             state.directory_listing = payload;
             return true;
-            },
+        },
 
         sortDirectoryListing(state, prop) {
             state.directory_listing.sort(sortByProperty(prop));
         },
 
-        playVideo(state, payload){
+        playVideo(state, payload) {
             state.video_playing = true;
             state.current_video_id = payload.id;
             state.current_video_title = payload.title;
 
         },
 
-        stopVideo(state){
+        stopVideo(state) {
             state.video_playing = false;
+        },
+
+        enableOverlay(state) {
+            state.overlay = true;
+        },
+        disableOverlay(state) {
+            state.overlay = false;
         }
     },
     actions: {},
