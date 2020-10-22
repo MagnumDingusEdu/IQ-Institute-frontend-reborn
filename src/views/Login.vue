@@ -158,6 +158,19 @@
                           required
 
                       />
+                      <v-text-field
+                          v-model="r_phone"
+                          :rules="r_phone_rules"
+
+                          label="Mobile No."
+                          name="mobile"
+                          append-icon="mdi-phone"
+                          type="text"
+                          color="orange accent-3"
+                          outlined
+                          required
+
+                      />
                       <v-select
                           :rules="r_course_rules"
                           required
@@ -246,6 +259,12 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
 
+      r_phone: '',
+      r_phone_rules: [
+        v => !!v || 'Mobile number cannot be empty',
+        v => /^(\+\d{1,3}[- ]?)?\d{10}$/.test(v) || 'Please enter a valid mobile number'
+      ],
+
       r_course_rules: [
         v => v.length > 0 || 'Please select at least one course',
       ],
@@ -283,30 +302,59 @@ export default {
       if (!this.$refs.r_form.validate()) return
       this.loading_r = true;
 
-      setTimeout(() => {
+      this.axios.post('users/register/', {
+        name: this.r_name,
+        email: this.r_email,
+        mobile: this.r_phone,
+        courses: this.course_selections.join(', ')
+      }).then((response) => {
+        response;
         this.loading_r = false;
         this.sendAlert('Thank you for registering ! We will contact you soon on your provided e-mail address.', true);
         this.step--;
-      }, 3000)
+      }).catch((error) => {
+        if (!error.response) {
+          this.sendAlert('Please check your internet connection.', false);
+          this.loading_r = false;
+        } else {
+          this.sendAlert(`Unable to register. Error code : ${error.response.status}`, false);
+          this.loading_r = false;
+        }
+      })
+
     },
 
     login() {
+      this.clearAlert();
       if (!this.$refs.l_form.validate()) return
       this.l_loading = true;
-      // this.login_prompt = true;
 
-      setTimeout(() => {
-        this.l_loading = false;
-        this.login_prompt = false;
+      this.axios.post('users/login/', {username: this.l_username, password: this.l_password}).then((response) => {
 
-        this.sendAlert('Incorrect username or password', false)
-        this.authorize();
-      }, 3000)
+        this.authorize(response.data);
+      }).catch((error) => {
+        if (!error.response) {
+          this.sendAlert('Please check your internet connection.', false);
+          this.l_loading = false;
+        } else if (error.response.status === 400) {
+          this.sendAlert('Incorrect username or password', false);
+          this.l_loading = false;
+        } else {
+          this.sendAlert(`Unable to sign in. Error code : ${error.response.status}`, false);
+          this.l_loading = false;
+        }
+      })
     },
     sendAlert(message, success = true) {
       this.top_alert = true;
       this.top_alert_message = message;
       this.top_alert_type = success ? 'success' : 'error';
+
+    },
+
+    clearAlert() {
+      this.top_alert = false;
+      this.top_alert_message = '';
 
     },
 
@@ -318,23 +366,21 @@ export default {
       this.login_prompt = false;
     },
 
-    authorize() {
+    authorize(payload) {
+      this.$store.commit(
+          'login',
+          {
+            token: payload.token,
+            name: payload.name,
+            username: this.l_username,
+            courses: payload.courses
+          });
       this.login_prompt = true;
       setTimeout(() => {
         this.login_prompt = false;
         this.$router.push('/');
-      }, 2000)
-      this.$store.commit(
-          'login',
-          {
-            token: 'test-token',
-            name: 'vividh-mariya',
-            username: 'magnum',
-            courses: [
-                'course1',
-                'course2'
-            ]
-          });
+      }, 3000)
+
 
     }
 

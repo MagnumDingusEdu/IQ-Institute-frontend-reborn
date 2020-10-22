@@ -6,7 +6,11 @@ export default {
         username: null,
         courses: null
     },
-    getters: {},
+    getters: {
+        authToken(state){
+            return state.auth_token;
+        }
+    },
     mutations: {
         login(store, payload) {
             store.is_authenticated = true;
@@ -22,8 +26,12 @@ export default {
             store.name = null;
             store.username = null;
             store.courses = null;
-        }
+        },
+
+
     },
-    actions: {},
+    actions: {
+
+    },
 
 }

@@ -11,7 +11,7 @@ import lodash from 'lodash'
 
 Vue.use(Vuetify);
 
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = 'http://localhost:8000/'
 export default new Vuetify({
     iconfont: 'mdi' | 'fa' | 'fas',
     theme: { light: false, dark: true },

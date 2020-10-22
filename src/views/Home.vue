@@ -1,15 +1,26 @@
 <template>
-  <div class="dashboard pa-0 ma-0" >
+  <div class="dashboard pa-0 ma-0">
     <v-overlay :value="overlay" absolute opacity="0.5" color="black"></v-overlay>
     <GoHome/>
     <Player/>
     <!--    Main Content -->
     <v-container class="mt-15">
-      <v-row class="mb-3 d-flex justify-space-between" >
+      <v-alert
+          border="right"
+          colored-border
+          :type="top_alert_type"
+          elevation="2"
+          v-if="top_alert"
+      >
+        {{ top_alert_message }}
+      </v-alert>
+      <v-row class="mb-3 d-flex justify-space-between">
         <v-col cols="9">
           <v-btn
-          text
-          class="grey--text text--lighten-2"
+              text
+              class="grey--text text--lighten-2"
+              :disabled="alreadyAtRoot"
+              @click="goBackOneStep"
           >
             <v-icon left>
               fa-chevron-left
@@ -20,11 +31,12 @@
           <v-btn
               text
               class="grey--text text--lighten-2"
+              @click="goToRoot"
           >
             Home
           </v-btn>
         </v-col>
-        <v-col  cols="3 d-flex justify-end">
+        <v-col cols="3 d-flex justify-end">
 
           <v-menu offset-y transition="slide-y-transition" bottom right>
             <template v-slot:activator="{ on, attrs }">
@@ -85,13 +97,13 @@
             v-for="lecture in lecture_list"
 
             :key="lecture.id"
-
+            :id="lecture.id"
             :title="lecture.title"
-            :upload_date="lecture.date"
+            :upload_date="lecture.date_created"
             :status="'ongoing'"
             :divider="false"
-            :video_id="lecture.id"
-            :is_video="lecture.type"
+            :video_id="hexToBase64(lecture.video_link)"
+            :is_video="lecture.type === 'vid'"
             class="mb-3">
 
         </Card>
@@ -112,45 +124,72 @@ export default {
   components: {Card, GoHome, Player},
   data() {
     return {
-      loading: true,
       info: null,
+      top_alert: false,
+      top_alert_type: 'success',
+      top_alert_message: ""
     }
   },
 
   methods: {
+    hexToBase64(str) {
+      if(str == null) return null
+      return atob(String.fromCharCode.apply(null,
+          str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
+      );
+    },
+
     sort_listing(prop) {
       this.$store.commit('sortDirectoryListing', prop);
     },
 
+    sendAlert(message, success = true) {
+      this.top_alert = true;
+      this.top_alert_message = message;
+      this.top_alert_type = success ? 'success' : 'error';
 
+    },
+
+    clearAlert() {
+      this.top_alert = false;
+      this.top_alert_message = '';
+
+    },
+
+    goToRoot() {
+      this.$store.dispatch('getLecturesForPath', null);
+    },
+
+    goBackOneStep() {
+      this.$store.dispatch('goToPreviousFolder');
+    }
   },
   mounted() {
-    this.axios.get('http://localhost:8000/api')
-        .then(response => {
-          this.loading = false;
-          this.$store.commit('setDirectoryListing', response.data);
-          this.$store.commit('sortDirectoryListing', 'type');
-        })
-        .catch(_ => {
 
-          _
-          this.snack_message = "Network error while loading resource";
-          this.snackbar = true;
-        });
-
-
+    this.$store.dispatch('getLecturesForPath', null);
   },
   computed: {
     lecture_list() {
       return this.$store.state.dashboard.directory_listing;
     },
 
-    overlay(){
+    overlay() {
       return this.$store.state.dashboard.overlay;
+    },
+
+    alreadyAtRoot() {
+      return this.$store.state.dashboard.parent_folder_id === null;
+    },
+
+    loading() {
+      return this.$store.state.dashboard.loading;
     }
 
   },
 
 
 }
+
+
 </script>
+

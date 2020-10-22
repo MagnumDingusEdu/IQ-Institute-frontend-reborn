@@ -5,26 +5,26 @@
       <v-row justify="start">
 
 
-          <v-img
-              v-if="is_video"
-              max-width="150"
-              :lazy-src="`https://i.ytimg.com/vi/${video_id}/hqdefault.jpg`"
-              :src="`https://i.ytimg.com/vi/${video_id}/hqdefault.jpg`"
-              contain
-              class="ma-2"
-          ></v-img>
+        <v-img
+            v-if="is_video"
+            max-width="150"
+            :lazy-src="`https://i.ytimg.com/vi/${video_id}/hqdefault.jpg`"
+            :src="`https://i.ytimg.com/vi/${video_id}/hqdefault.jpg`"
+            contain
+            class="ma-2"
+        ></v-img>
 
-          <v-icon
-              v-if="!is_video"
-              :size="height"
+        <v-icon
+            v-if="!is_video"
+            :size="height"
 
-              v-show="!$vuetify.breakpoint.xs"
-              contain
-              class="mx-5"
-              style="min-width: 130px"
+            v-show="!$vuetify.breakpoint.xs"
+            contain
+            class="mx-5"
+            style="min-width: 130px"
 
-          >fa-folder
-          </v-icon>
+        >fa-folder
+        </v-icon>
 
         <v-col cols="8" md="6">
           <div class="caption grey--text " v-if="is_video">Video Title</div>
@@ -33,7 +33,7 @@
           <a class="text-h6  card-title" style="max-height: 150px" href="#" @click.prevent="handleClick">{{ title }}</a>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="6" sm="4" md="2" >
+        <v-col cols="6" sm="4" md="2">
 
           <div class="caption grey--text" v-if="is_video">Uploaded on</div>
           <div class="caption grey--text" v-if="!is_video">Created on</div>
@@ -67,7 +67,8 @@ export default {
     'content',
     'divider',
     'video_id',
-    'is_video'
+    'is_video',
+    'id'
   ],
 
   computed: {
@@ -91,14 +92,14 @@ export default {
 
 
   methods: {
-   handleClick(){
-     if(!this.is_video){
-       console.log("Folder clicked")
-     }else{
-      this.$store.commit('playVideo',{id: this.video_id, title: this.title});
+    handleClick() {
+      if (!this.is_video) {
+        this.$store.dispatch('getLecturesForPath', this.id);
+      } else {
+        this.$store.commit('playVideo', {id: this.video_id, title: this.title});
 
-     }
-   }
+      }
+    }
   }
 
 
