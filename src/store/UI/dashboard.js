@@ -18,8 +18,9 @@ export default {
 
         overlay: false,
         loading: false,
-
+        video_loading: false,
     },
+
     getters: {},
     mutations: {
         setDirectoryListing(state, payload) {
@@ -36,12 +37,6 @@ export default {
             state.directory_listing.sort(sortByProperty(prop));
         },
 
-        playVideo(state, payload) {
-            state.video_playing = true;
-            state.current_video_id = payload.id;
-            state.current_video_title = payload.title;
-
-        },
 
         stopVideo(state) {
             state.video_playing = false;
@@ -61,6 +56,19 @@ export default {
         startLoading(state) {
             state.loading = true;
         },
+        startVideoLoading(state) {
+            state.video_loading = true;
+        },
+        stopVideoLoading(state) {
+            state.video_loading = false;
+        },
+        playVideoMut(state, payload) {
+
+            state.video_playing = true;
+            state.current_video_id = payload.id;
+            state.current_video_title = payload.title;
+        },
+
 
     },
     actions: {
@@ -91,9 +99,20 @@ export default {
                     context.commit('stopLoading');
                 });
         },
+        playVideo(context, payload) {
+            context.commit('startVideoLoading');
+            context.dispatch('confirmLogin').then((value) => {
+                console.log(value);
+            });
+            setTimeout(()=>{
+                context.commit('stopVideoLoading');
+                context.commit('playVideoMut', payload);
+            }, 3000);
+        },
+
+
         goToPreviousFolder(context) {
             const parent_folder_id = context.state.parent_folder_id;
-            console.log(parent_folder_id);
             context.dispatch('getLecturesForPath', parent_folder_id.id).then({});
         }
 

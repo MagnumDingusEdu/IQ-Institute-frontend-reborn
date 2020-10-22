@@ -96,7 +96,7 @@ export default {
       if (!this.is_video) {
         this.$store.dispatch('getLecturesForPath', this.id);
       } else {
-        this.$store.commit('playVideo', {id: this.video_id, title: this.title});
+        this.$store.dispatch('playVideo', {id: this.video_id, title: this.title});
 
       }
     }

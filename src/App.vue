@@ -27,9 +27,30 @@ export default {
     Snackbar
 
   },
-  data: () => ({
-    //
-  }),
+  created() {
+    setInterval(function (){
+      console.log("Checkin login.");
+      if (this.$store.state.user.is_authenticated){
+        this.$store.dispatch('confirmLogin');
+      }
+    }.bind(this), 120000);
+  },
+  data(){
+   return {
+     fullscreen: false,
+   }
+  },
+  computed: {
+
+  },
+
+  methods: {
+    confirmSessionValidity(){
+
+    },
+
+  },
+
 
 };
 </script>

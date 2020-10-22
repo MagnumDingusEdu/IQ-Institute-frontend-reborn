@@ -49,6 +49,7 @@ router.beforeEach((to, from, next) => {
     } else if (store.state.user.is_authenticated === false) {
         next({path: '/login'});
     } else {
+
         next();
     }
 })

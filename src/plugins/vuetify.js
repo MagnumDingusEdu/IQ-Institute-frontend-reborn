@@ -15,6 +15,9 @@ axios.defaults.baseURL = 'http://localhost:8000/'
 export default new Vuetify({
     iconfont: 'mdi' | 'fa' | 'fas',
     theme: { light: false, dark: true },
+    mounted(){
+
+    }
 });
 
 Vue.use(VueAxios, axios);

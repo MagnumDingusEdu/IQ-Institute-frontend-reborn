@@ -285,16 +285,26 @@ export default {
       l_loading: false,
 
       login_prompt: false,
-      top_alert: false,
-      top_alert_message: '',
-      top_alert_type: 'error',
+
     }
   },
   props: {
     source: String
   },
   watch: {},
+  computed: {
+    top_alert() {
+      return this.$store.state.user.top_alert;
+    },
 
+    top_alert_message() {
+      return this.$store.state.user.top_alert_message;
+    },
+
+    top_alert_type() {
+      return this.$store.state.user.top_alert_type;
+    }
+  },
   methods: {
     register() {
 
@@ -339,6 +349,9 @@ export default {
         } else if (error.response.status === 400) {
           this.sendAlert('Incorrect username or password', false);
           this.l_loading = false;
+        } else if (error.response.status === 406) {
+          this.sendAlert('This account has been deactivated. Please contact the administrator for further details.', false);
+          this.l_loading = false;
         } else {
           this.sendAlert(`Unable to sign in. Error code : ${error.response.status}`, false);
           this.l_loading = false;
@@ -346,23 +359,17 @@ export default {
       })
     },
     sendAlert(message, success = true) {
-      this.top_alert = true;
-      this.top_alert_message = message;
-      this.top_alert_type = success ? 'success' : 'error';
-
+      this.$store.commit('showLoginAlert', {message: message, type: success ? 'success' : 'error'})
     },
 
     clearAlert() {
-      this.top_alert = false;
-      this.top_alert_message = '';
-
+      this.$store.commit('dismissLoginAlert');
     },
 
     switchWindow() {
       if (this.step === 1) this.step = 2
       else this.step = 1
-      this.top_alert = false;
-      this.top_alert_message = '';
+      this.$store.commit('dismissLoginAlert');
       this.login_prompt = false;
     },
 
@@ -382,9 +389,11 @@ export default {
       }, 3000)
 
 
-    }
+    },
 
-  }
+
+  },
+
 }
 </script>
 

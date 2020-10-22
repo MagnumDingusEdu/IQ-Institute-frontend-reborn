@@ -2,7 +2,7 @@
   <nav>
     <v-app-bar dark app fixed>
       <v-app-bar-nav-icon class="grey--text" @click="drawer=!drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-uppercase">
+      <v-toolbar-title class="text-uppercase" @click="goToMainWebsite" style="cursor: pointer">
         <span class="font-weight-light">IQ</span>
         <span class="font-weight-medium"> Institute</span>
       </v-toolbar-title>
@@ -44,15 +44,15 @@
                 :key="item.id"
                 link
                 class="search-tile"
-                @click="playSearchVid(item.id, item.title)"
+                @click="playSearchVid(hexToBase64(item.video_link), item.title)"
 
             >
               <v-list-item-avatar
                   rounded="0">
                 <v-img
                     max-width="150"
-                    :lazy-src="`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`"
-                    :src="`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`"
+                    :lazy-src="`https://i.ytimg.com/vi/${hexToBase64(item.video_link)}/hqdefault.jpg`"
+                    :src="`https://i.ytimg.com/vi/${hexToBase64(item.video_link)}/hqdefault.jpg`"
                     contain
                     class="ma-2"
                 ></v-img>
@@ -86,7 +86,7 @@
           </v-icon>
 
         </v-btn>
-        <v-btn color="white ml-5" depressed text @click="logOutCurrentUser">
+        <v-btn color="white ml-5" depressed text @click="logOutCurrentUser" :loading="logoutLoading">
           <span>Sign out</span>
           <v-icon right>mdi-exit-to-app</v-icon>
         </v-btn>
@@ -137,6 +137,7 @@
 
 <script>
 import _ from 'lodash';
+import axios from "axios";
 
 export default {
   name: "Navbar.vue",
@@ -163,17 +164,15 @@ export default {
       this.drawer = false
     },
 
-    items() {
-      // if(this.items.length === 0){
-      //   this.$store.commit('disableOverlay');
-      // }else {
-      //   this.$store.commit('enableOverlay')
-      // }
-    },
-
 
   },
   methods: {
+    hexToBase64(str) {
+      if(str == null) return null
+      return atob(String.fromCharCode.apply(null,
+          str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
+      );
+    },
     menu_state() {
       console.log(this.menu_state);
     },
@@ -183,18 +182,34 @@ export default {
     },
 
     s_debounced_search: _.debounce(function (string) {
-      console.log(string);
       if (string === "") {
         this.items = []
       } else {
-        this.axios.get('http://localhost:8000/api')
+        var auth_token = this.$store.state.user.auth_token;
+        axios.get(`lectures/search/?query=${string}`, {headers: {'Authorization': `Token ${auth_token}`}})
             .then(response => {
+                this.items = (response.data.results.slice(0, 10));
               this.s_loading = false;
-              this.items = response.data.slice(0, 10);
             })
-            .catch(error => {
-              console.log(error);
+            .catch((error) => {
+              if (!error.response) {
+                console.log('Please check your internet connection.', false);
+              } else if (error.response.status === 401) {
+
+                console.log('Invalid authentication token. Please logout and login again.', false);
+              } else {
+                console.log(`Unable to sign in. Error code : ${error.response.status}`, false);
+              }
+
             });
+        // this.axios.get('http://localhost:8000/api')
+        //     .then(response => {
+        //       this.s_loading = false;
+        //       this.items = response.data.slice(0, 10);
+        //     })
+        //     .catch(error => {
+        //       console.log(error);
+        //     });
       }
 
     }, 300),
@@ -211,19 +226,29 @@ export default {
 
     playSearchVid(id, title) {
 
-      this.$store.commit('playVideo', {id: id, title: title});
+      this.$store.dispatch('playVideo', {id: id, title: title});
 
     },
     logOutCurrentUser() {
-      this.$store.commit('logout');
-      this.$router.push('/login');
+      this.$store.dispatch('logout_user');
+
+    },
+
+    goToMainWebsite(){
+      window.location = 'https://iqinstitute.org';
     }
+
+
 
   },
 
   computed: {
     loggedIn() {
       return this.$store.state.user.is_authenticated;
+    },
+
+    logoutLoading(){
+      return this.$store.state.user.sign_out_loading;
     }
   },
 
