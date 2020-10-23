@@ -49,6 +49,10 @@ export default {
         dismissLoginAlert(store) {
             store.top_alert = false;
             store.top_alert_message = '';
+        },
+
+        setEmail(store, payload){
+            store.email = payload;
         }
     },
     actions: {

@@ -108,6 +108,15 @@
 
         </Card>
 
+        <v-card-text
+            class="text-center font-weight-medium mt-16"
+            style="letter-spacing: 3px; font-size: 1em"
+            v-if="lecture_list.length === 0"
+
+        >
+          -- Folder empty --
+        </v-card-text>
+
       </template>
     </v-container>
   </div>

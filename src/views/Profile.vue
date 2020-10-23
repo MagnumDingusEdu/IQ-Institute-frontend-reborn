@@ -134,6 +134,7 @@ export default {
   name: "Profile.vue",
   data() {
     return {
+
       email_form: null,
       email_field: '',
       email_loading: false,
@@ -170,6 +171,11 @@ export default {
       ]
     }
   },
+  computed: {
+    email(){
+      return this.$store.state.user.email;
+    }
+  },
   methods: {
     changeEmail() {
       if (!this.$refs.email_form.validate()) return
@@ -179,13 +185,11 @@ export default {
 
         this.sendAlert('E-mail changed successfully.');
         this.email_loading = false;
-
+        this.$store.commit('setEmail', this.email_field);
       }).catch((error) => {
         this.email_loading = false;
         if (!error.response) {
           this.sendAlert('Please check your internet connection.', false);
-        } else if (error.response.status === 404) {
-          this.sendAlert("The OTP you've entered is incorrect. Please try again.", false);
         } else if (error.response.status === 406) {
           this.sendAlert('This account has been deactivated. Please contact the administrator for further details.', false);
         } else {
@@ -198,7 +202,13 @@ export default {
       this.top_alert_message = message;
       this.top_alert_type = type ? 'success' : 'error';
     }
+  },
+  watch: {
+    email(){
+      this.profile_items[2].value = this.$store.state.user.email;
+    }
   }
+
 }
 </script>
 

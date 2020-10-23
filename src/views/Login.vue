@@ -32,6 +32,9 @@
               :type="top_alert_type"
               elevation="2"
               v-if="top_alert"
+              dismissible
+              close-icon="mdi-close"
+              class="pr-8"
 
           >
             {{ top_alert_message }}
