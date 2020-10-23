@@ -74,7 +74,7 @@ export default {
             var token = context.state.auth_token;
             axios.post('users/confirm_login/', {"token": token}).then(
                 (response) => {
-                    console.log(response);
+                    response
                 }).catch((error) => {
 
                 if (error.response.status === 401) {
