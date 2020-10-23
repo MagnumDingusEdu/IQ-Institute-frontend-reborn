@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/router";
 
 export default {
     state: {
@@ -91,8 +92,12 @@ export default {
                     if (!error.response) {
                         console.log('Please check your internet connection.', false);
                     } else if (error.response.status === 401) {
-
-                        console.log('Invalid authentication token. Please logout and login again.', false);
+                        context.commit('showLoginAlert', {
+                            message: "Your session has expired. Please login again.",
+                            type: 'error'
+                        });
+                        context.commit('logout');
+                        router.push('/login');
                     } else {
                         console.log(`Unable to sign in. Error code : ${error.response.status}`, false);
                     }
@@ -101,16 +106,12 @@ export default {
         },
         playVideo(context, payload) {
             context.commit('startVideoLoading');
-            context.dispatch('confirmLogin').then((value) => {
-                console.log(value);
-            });
-            setTimeout(()=>{
+            context.dispatch('confirmLogin').then();
+            setTimeout(() => {
                 context.commit('stopVideoLoading');
                 context.commit('playVideoMut', payload);
-            }, 3000);
+            }, 1500);
         },
-
-
         goToPreviousFolder(context) {
             const parent_folder_id = context.state.parent_folder_id;
             context.dispatch('getLecturesForPath', parent_folder_id.id).then({});

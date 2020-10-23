@@ -88,9 +88,12 @@
                       />
 
                     </v-form>
+                    <div class="text-center mt-3 ml-2 " style="letter-spacing: 3px; cursor: pointer" @click="step=3">
+                      <span class="font-weight-bold">Forgot password ?</span>
+                    </div>
                   </v-card-text>
                   <div class="text-center mt-3 mb-6">
-                    <v-btn large color="orange darken-2" class="mr-4" dark text outlined @click="switchWindow">
+                    <v-btn large color="orange darken-2" class="mr-4" dark text outlined @click="step=2">
                       Sign up
                     </v-btn>
                     <v-btn
@@ -213,7 +216,199 @@
 
                   </div>
                   <div class="text-center sign-in-prompt mb-5">
-                    Already have an account ? <a class="orange--text darken-2" @click="switchWindow">Sign in</a>
+                    Already have an account ? <a class="orange--text darken-2" @click="step=1">Sign in</a>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-window-item>
+            <v-window-item :value="3">
+              <v-row>
+                <v-col cols="12">
+                  <v-card-text class="mt-12">
+                    <h1 class="text-center display-1 orange--text text--darken-1 text-uppercase">Reset Password</h1>
+
+                    <div class="text-center mt-3 mb-12 ml-1 text-uppercase" style="letter-spacing: 3px">
+                      <span class="font-weight-bold">IQ Institute</span> | web portal
+                    </div>
+
+                    <v-form
+                        class="mx-5"
+                        ref="p_form_model1"
+                        v-model="p_form_model1"
+                        lazy-validation
+
+                    >
+
+                      <v-text-field
+                          v-model="password_reset_email"
+                          :rules="r_email_rules"
+
+                          label="E-Mail"
+                          name="E-mail"
+                          append-icon="mdi-email"
+                          type="email"
+                          color="orange accent-3"
+                          placeholder="Your e-mail address"
+                          outlined
+                          required
+
+                      />
+                    </v-form>
+                  </v-card-text>
+                  <div class="text-center  mb-6">
+                    <v-btn
+                        large
+                        color="orange darken-2"
+                        dark
+                        text
+                        outlined
+                        @click="sendResetToken"
+                        :loading="p_button1_loading"
+                        :disabled="p_button1_loading"
+
+                    >
+                      Send Recovery E-mail
+                      <template v-slot:loader>
+                        <span class="custom-loader">
+                          <v-icon light>mdi-cached</v-icon>
+                        </span>
+                      </template>
+                    </v-btn>
+
+                  </div>
+                  <div class="text-center sign-in-prompt mb-5">
+                    Already have an account ? <a class="orange--text darken-2" @click="step=1">Sign in</a>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-window-item>
+            <v-window-item :value="4">
+              <v-row>
+                <v-col cols="12">
+                  <v-card-text class="mt-12">
+                    <h1 class="text-center display-1 orange--text text--darken-1 text-uppercase">Reset Password</h1>
+
+                    <div class="text-center mt-3 mb-12 ml-1 text-uppercase" style="letter-spacing: 3px">
+                      <span class="font-weight-bold">IQ Institute</span> | web portal
+                    </div>
+
+                    <v-form
+                        class="mx-5"
+                        ref="p_otp_form"
+                        v-model="p_otp_form"
+                        lazy-validation
+
+                    >
+
+                      <v-text-field
+                          v-model="p_otp"
+                          label="OTP"
+                          name="OTP"
+                          append-icon="mdi-lock-clock"
+                          type="text"
+                          color="orange accent-3"
+                          placeholder="One-time Password"
+                          outlined
+                          required
+                      />
+                    </v-form>
+                  </v-card-text>
+                  <div class="text-center  mb-6">
+                    <v-btn
+                        large
+                        color="orange darken-2"
+                        dark
+                        text
+                        outlined
+                        @click="confirmOTP"
+                        :loading="p_otp_form_loading"
+                        :disabled="p_otp_form_loading"
+
+                    >
+                      Confirm OTP
+                      <template v-slot:loader>
+                        <span class="custom-loader">
+                          <v-icon light>mdi-cached</v-icon>
+                        </span>
+                      </template>
+                    </v-btn>
+
+                  </div>
+                  <div class="text-center sign-in-prompt mb-5">
+                    Already have an account ? <a class="orange--text darken-2" @click="step=1">Sign in</a>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-window-item>
+            <v-window-item :value="5">
+              <v-row>
+                <v-col cols="12">
+                  <v-card-text class="mt-12">
+                    <h1 class="text-center display-1 orange--text text--darken-1 text-uppercase">Reset Password</h1>
+
+                    <div class="text-center mt-3 mb-12 ml-1 text-uppercase" style="letter-spacing: 3px">
+                      <span class="font-weight-bold">IQ Institute</span> | web portal
+                    </div>
+
+                    <v-form
+                        class="mx-5"
+                        ref="p_reset_password_model"
+                        v-model="p_reset_password_model"
+                        lazy-validation
+
+                    >
+
+                      <v-text-field
+                          v-model="p_new_password"
+                          :rules="p_new_password_rules"
+
+                          label="New Password"
+                          name="new-password"
+                          :append-icon="p_new_password_visible ? 'mdi-eye' : 'mdi-eye-off'"
+                          :type="p_new_password_visible ? 'text' : 'password'"
+                          color="orange accent-3"
+                          outlined
+                          required
+                          @click:append="p_new_password_visible = !p_new_password_visible"
+                      />
+                      <v-text-field
+                          v-model="p_confirm_new_password"
+                          :rules="[passwordConfirmationRule]"
+
+                          label="Confirm Password"
+                          name="confirm-password"
+                          :append-icon="p_new_password_visible ? 'mdi-eye' : 'mdi-eye-off'"
+                          :type="p_new_password_visible ? 'text' : 'password'"
+                          color="orange accent-3"
+                          outlined
+                          required
+                          @click:append="p_new_password_visible = !p_new_password_visible"
+                      />
+                    </v-form>
+                  </v-card-text>
+                  <div class="text-center  mb-6">
+                    <v-btn
+                        large
+                        color="orange darken-2"
+                        dark
+                        text
+                        outlined
+                        :loading="p_reset_password_loading"
+                        :disabled="p_reset_password_loading"
+                        @click="changePassword"
+
+                    >
+                      Change Password
+                      <template v-slot:loader>
+                        <span class="custom-loader">
+                          <v-icon light>mdi-cached</v-icon>
+                        </span>
+                      </template>
+                    </v-btn>
+
+                  </div>
+                  <div class="text-center sign-in-prompt mb-5">
+                    Already have an account ? <a class="orange--text darken-2" @click="step=1">Sign in</a>
                   </div>
                 </v-col>
               </v-row>
@@ -286,6 +481,29 @@ export default {
 
       login_prompt: false,
 
+
+      password_reset_email: null,
+      p_form_model1: null,
+      p_button1_loading: false,
+
+
+      p_otp: '',
+      p_otp_form: null,
+      p_otp_form_loading: false,
+
+      p_reset_password_model: null,
+      p_new_password: '',
+      p_new_password_visible: false,
+      p_confirm_new_password: '',
+
+      p_new_password_rules: [
+        v => !!v || 'New password cannot be empty.',
+        v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(v) || 'Min. 8 characters with at least one capital letter, a number and a special character.'
+      ],
+
+      p_reset_password_loading: false,
+
+
     }
   },
   props: {
@@ -303,9 +521,21 @@ export default {
 
     top_alert_type() {
       return this.$store.state.user.top_alert_type;
-    }
+    },
+    passwordConfirmationRule() {
+      return (this.p_new_password === this.p_confirm_new_password) || 'The passwords do not match.'
+    },
   },
   methods: {
+
+    sendAlert(message, success = true) {
+      this.$store.commit('showLoginAlert', {message: message, type: success ? 'success' : 'error'})
+    },
+
+    clearAlert() {
+      this.$store.commit('dismissLoginAlert');
+    },
+
     register() {
 
 
@@ -321,7 +551,7 @@ export default {
         response;
         this.loading_r = false;
         this.sendAlert('Thank you for registering ! We will contact you soon on your provided e-mail address.', true);
-        this.step--;
+        this.step = 1;
       }).catch((error) => {
         if (!error.response) {
           this.sendAlert('Please check your internet connection.', false);
@@ -358,13 +588,6 @@ export default {
         }
       })
     },
-    sendAlert(message, success = true) {
-      this.$store.commit('showLoginAlert', {message: message, type: success ? 'success' : 'error'})
-    },
-
-    clearAlert() {
-      this.$store.commit('dismissLoginAlert');
-    },
 
     switchWindow() {
       if (this.step === 1) this.step = 2
@@ -390,6 +613,95 @@ export default {
 
 
     },
+
+    sendResetToken() {
+      this.clearAlert();
+      if (!this.$refs.p_form_model1.validate()) return
+      this.p_button1_loading = true;
+
+      this.axios.post('users/password_reset/', {email: this.password_reset_email}).then(() => {
+
+        this.sendAlert('A one-time password has been sent to your e-mail address.');
+        this.p_button1_loading = false;
+        this.step = 4;
+      }).catch((error) => {
+        this.p_button1_loading = false;
+        console.log(error);
+        if (!error.response) {
+          this.sendAlert('Please check your internet connection.', false);
+          this.p_button1_loading = false;
+        } else if (error.response.status === 400) {
+          this.sendAlert('There is no active user associated with this e-mail address or the password can not be changed.', false);
+          this.p_button1_loading = false;
+        } else if (error.response.status === 406) {
+          this.sendAlert('This account has been deactivated. Please contact the administrator for further details.', false);
+          this.p_button1_loading = false;
+        } else {
+          this.sendAlert(`Unable to sign in. Error code : ${error.response.status}`, false);
+          this.p_button1_loading = false;
+        }
+      })
+    },
+
+    confirmOTP() {
+      if (!this.$refs.p_otp_form.validate()) return
+      this.p_otp_form_loading = true;
+
+      this.axios.post('users/password_reset/validate_token/', {token: this.p_otp}).then(() => {
+
+        this.sendAlert('OTP verified successfully. Please enter a new password.');
+        this.p_otp_form_loading = false;
+        this.step=5;
+      }).catch((error) => {
+        this.p_button1_loading = false;
+        console.log(error);
+        if (!error.response) {
+          this.sendAlert('Please check your internet connection.', false);
+          this.p_otp_form_loading = false;
+        } else if (error.response.status === 404) {
+          this.sendAlert("The OTP you've entered is incorrect. Please try again.", false);
+          this.p_otp_form_loading = false;
+        } else if (error.response.status === 406) {
+          this.sendAlert('This account has been deactivated. Please contact the administrator for further details.', false);
+          this.p_otp_form_loading = false;
+        } else {
+          this.sendAlert(`An error occurred. Error code : ${error.response.status}`, false);
+          this.p_otp_form_loading = false;
+        }
+      })
+    },
+
+    changePassword() {
+      if (!this.$refs.p_reset_password_model.validate()) return
+      this.p_reset_password_loading = true;
+
+      this.axios.post('users/password_reset/confirm/', {token: this.p_otp, password: this.p_new_password}).then(() => {
+
+        this.sendAlert('Password has been changed successfully. Please login with your new credentials.');
+        this.p_reset_password_loading = false;
+        this.step=1;
+      }).catch((error) => {
+        this.p_button1_loading = false;
+        console.log(error);
+        if (!error.response) {
+          this.sendAlert('Please check your internet connection.', false);
+          this.p_reset_password_loading = false;
+
+        } else if (error.response.status === 404) {
+          this.sendAlert("An error occurred. Please try again.", false);
+          this.step = 1;
+          this.p_reset_password_loading = false;
+        } else if (error.response.status === 406) {
+          this.sendAlert('This account has been deactivated. Please contact the administrator for further details.', false);
+          this.p_reset_password_loading = false;
+          this.step = 1;
+        } else {
+          this.sendAlert(`An error occurred. Password has not been changed. Error code : ${error.response.status}`, false);
+          this.p_reset_password_loading = false;
+          this.step = 1;
+        }
+      })
+    }
 
 
   },
