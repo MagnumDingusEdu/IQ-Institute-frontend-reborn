@@ -12,6 +12,7 @@
             :src="`https://i.ytimg.com/vi/${video_id}/hqdefault.jpg`"
             contain
             class="ma-2"
+            @click="handleClick"
         ></v-img>
 
         <v-icon
@@ -22,6 +23,7 @@
             contain
             class="mx-5"
             style="min-width: 130px"
+            @click.prevent="handleClick"
 
         >fa-folder
         </v-icon>

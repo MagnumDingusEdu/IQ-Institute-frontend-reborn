@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex justify-space-between ma-12">
+  <v-row class="d-flex justify-space-between ma-md-12">
     <!--    Message box        -->
     <v-col cols="12">
       <v-slide-y-transition>
@@ -69,7 +69,7 @@
 
           dark
       >
-        <v-card-title class="text-h4 ">
+        <v-card-title class="text-h4 text-break ">
           Change E-mail Address
         </v-card-title>
 

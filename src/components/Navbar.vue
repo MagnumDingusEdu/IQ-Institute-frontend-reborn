@@ -119,21 +119,30 @@
 
       <v-divider></v-divider>
 
-      <v-list nav dense v-if="loggedIn">
-<!--              <span v-if="loggedIn" class="d-flex text-center justify-center subtitle-2 mt-3">-->
-<!--        Logged in as guest-->
-<!--      </span>-->
-<!--        <span v-else class="d-flex text-center justify-center align-center subtitle-2 mt-3">-->
-<!--        Logged in as guest-->
-<!--      </span>-->
-        <v-list-item link v-for="nav_it in nav_items" v-bind:key="nav_it.id" :to="nav_it.route">
-          <v-list-item-icon>
-            <v-icon>{{ nav_it.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>{{ nav_it.title }}</v-list-item-title>
-        </v-list-item>
+      <v-row class="d-flex align-content-space-between">
+        <v-col cols="12">
+          <v-list nav v-if="loggedIn">
+            <v-list-item link v-for="nav_it in nav_items" v-bind:key="nav_it.id" :to="nav_it.route">
+              <v-list-item-icon>
+                <v-icon>{{ nav_it.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ nav_it.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+          <span v-else class="d-flex text-center justify-center align-center subtitle-2 mt-3">
+              Logged in as guest
+            </span>
+        </v-col>
 
-      </v-list>
+        <v-col style="position: absolute; bottom: 5px; left: 2px;" >
+          <v-list-item link @click="drawer = false;" >
+
+            <v-list-item-title>Close</v-list-item-title>
+          </v-list-item>
+
+        </v-col>
+      </v-row>
+
 
     </v-navigation-drawer>
   </nav>
@@ -157,7 +166,7 @@ export default {
       nav_items: [
         {id: 1, title: "Home", icon: "mdi-home", route: "/"},
         {id: 2, title: "Profile", icon: "mdi-face", route: "/profile"},
-        {id: 3, title: "Restricted", icon: "mdi-lock", route: "/login"}
+
       ],
 
     }
