@@ -7,6 +7,7 @@
           width="300"
           overlay-opacity="0.8"
 
+
       >
         <v-card
             dark
@@ -31,6 +32,7 @@
               :type="top_alert_type"
               elevation="2"
               v-if="top_alert"
+
           >
             {{ top_alert_message }}
           </v-alert>
@@ -603,7 +605,8 @@ export default {
             token: payload.token,
             name: payload.name,
             username: this.l_username,
-            courses: payload.courses
+            courses: payload.courses,
+            email: payload.email,
           });
       this.login_prompt = true;
       setTimeout(() => {

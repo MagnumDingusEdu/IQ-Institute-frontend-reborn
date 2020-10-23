@@ -29,6 +29,7 @@ export default {
             store.username = payload.username;
             store.courses = payload.courses;
             store.sign_out_loading = false;
+            store.email = payload.email;
         },
 
         logout(store) {

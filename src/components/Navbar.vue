@@ -120,6 +120,12 @@
       <v-divider></v-divider>
 
       <v-list nav dense v-if="loggedIn">
+<!--              <span v-if="loggedIn" class="d-flex text-center justify-center subtitle-2 mt-3">-->
+<!--        Logged in as guest-->
+<!--      </span>-->
+<!--        <span v-else class="d-flex text-center justify-center align-center subtitle-2 mt-3">-->
+<!--        Logged in as guest-->
+<!--      </span>-->
         <v-list-item link v-for="nav_it in nav_items" v-bind:key="nav_it.id" :to="nav_it.route">
           <v-list-item-icon>
             <v-icon>{{ nav_it.icon }}</v-icon>
@@ -128,9 +134,7 @@
         </v-list-item>
 
       </v-list>
-      <span v-else class="d-flex text-center justify-center align-center subtitle-2 mt-3">
-        Logged in as guest
-      </span>
+
     </v-navigation-drawer>
   </nav>
 </template>
@@ -168,7 +172,7 @@ export default {
   },
   methods: {
     hexToBase64(str) {
-      if(str == null) return null
+      if (str == null) return null
       return atob(String.fromCharCode.apply(null,
           str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
       );
@@ -188,7 +192,7 @@ export default {
         var auth_token = this.$store.state.user.auth_token;
         axios.get(`lectures/search/?query=${string}`, {headers: {'Authorization': `Token ${auth_token}`}})
             .then(response => {
-                this.items = (response.data.results.slice(0, 10));
+              this.items = (response.data.results.slice(0, 10));
               this.s_loading = false;
             })
             .catch((error) => {
@@ -234,10 +238,9 @@ export default {
 
     },
 
-    goToMainWebsite(){
+    goToMainWebsite() {
       window.location = 'https://iqinstitute.org';
     }
-
 
 
   },
@@ -247,7 +250,7 @@ export default {
       return this.$store.state.user.is_authenticated;
     },
 
-    logoutLoading(){
+    logoutLoading() {
       return this.$store.state.user.sign_out_loading;
     }
   },
