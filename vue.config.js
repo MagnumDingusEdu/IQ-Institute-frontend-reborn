@@ -1,5 +1,15 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ]
+
+    pluginOptions: {
+        electronBuilder: {
+            builderOptions: {
+                productName: "News App",
+            },
+        },
+    },
+    "transpileDependencies": [
+        "vuetify"
+    ],
+
+
 }

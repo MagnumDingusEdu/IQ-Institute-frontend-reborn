@@ -22,8 +22,11 @@ function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
-    }
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      devTools: false,
+
+    },
+
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -33,12 +36,17 @@ function createWindow() {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL('app://./index.html').then()
   }
 
   win.on('closed', () => {
     win = null
   })
+
+  win.removeMenu();
+  win.webContents.on("devtools-opened", () => {
+    win.webContents.closeDevTools();
+  });
 }
 
 // Quit when all windows are closed.

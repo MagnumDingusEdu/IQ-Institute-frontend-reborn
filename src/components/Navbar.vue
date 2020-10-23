@@ -248,7 +248,7 @@ export default {
     },
 
     goToMainWebsite() {
-      window.location = 'https://iqinstitute.org';
+
     }
 
 
