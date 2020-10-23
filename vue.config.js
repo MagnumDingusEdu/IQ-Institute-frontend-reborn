@@ -3,7 +3,7 @@ module.exports = {
     pluginOptions: {
         electronBuilder: {
             builderOptions: {
-                productName: "News App",
+                productName: "IQ Institute Student Portal",
             },
         },
     },
